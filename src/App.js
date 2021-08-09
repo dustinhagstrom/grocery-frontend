@@ -56,10 +56,7 @@ function App() {
 
   async function deleteGroceryItem(_id) {
     try {
-      let deletedGrocery = await axios.delete(
-        `${URL}/api/grocery/delete-grocery-by-id/${_id}`
-      );
-      console.log(deletedGrocery);
+      await axios.delete(`${URL}/api/grocery/delete-grocery-by-id/${_id}`);
     } catch (e) {
       console.log(e);
     }
@@ -71,10 +68,8 @@ function App() {
 
   //seperate the dom updates from the server calls
   const addGrocery = async (groceryItem) => {
-    console.log("click");
     try {
       let newGrocery = await createGroceryItem(groceryItem);
-      console.log(newGrocery);
       let newGroceryArray = [
         ...groceryArray,
         {
@@ -94,9 +89,6 @@ function App() {
     try {
       await updateGroceryItem(_id, groceryItem, isPurchased);
       let editedGroceryArray = [...groceryArray];
-      console.log(index);
-      console.log(groceryItem);
-      console.log(editedGroceryArray);
       editedGroceryArray[index].grocery = groceryItem;
       setGroceryArray(editedGroceryArray);
     } catch (e) {
@@ -106,9 +98,10 @@ function App() {
 
   const handlePurchased = async (_id, index, groceryItem, isPurchased) => {
     try {
-      await updateGroceryItem(_id, groceryItem);
+      await updateGroceryItem(_id, groceryItem, isPurchased);
       let editedGroceryArray = [...groceryArray];
       editedGroceryArray[index].purchased = isPurchased;
+      setGroceryArray(editedGroceryArray);
     } catch (e) {
       console.log(e);
     }

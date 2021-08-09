@@ -6,8 +6,6 @@ import { GroceryContext } from "../context/context";
 
 function Grocery() {
   const [canEdit, setCanEdit] = useState(false);
-  const [isPurchased, setIsPurchased] = useState(false);
-
   const {
     grocery: { _id, grocery, purchased },
     index,
@@ -15,6 +13,7 @@ function Grocery() {
     handlePurchased,
     handleDelete,
   } = useContext(GroceryContext);
+  const [isPurchased, setIsPurchased] = useState(purchased);
 
   const [groceryItem, setGroceryItem] = useState(grocery);
 
@@ -28,10 +27,12 @@ function Grocery() {
   };
 
   const handleOnPurchasedClick = () => {
-    console.log("click");
     setIsPurchased(!isPurchased);
-    handlePurchased(_id, index, groceryItem, isPurchased);
+    handlePurchased(_id, index, groceryItem, !isPurchased); //send in !isPurchased saves
+    //me from writing a useEffect to change this instance's value of
+    //isPurchased.
   };
+
   return (
     <>
       {canEdit ? (
