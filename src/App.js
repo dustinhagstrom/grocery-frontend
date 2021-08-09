@@ -12,18 +12,38 @@ import GroceryInput from "./components/Groceries/GroceryInput";
 
 import "./App.css";
 
+const URL = "http://localhost:8080";
+
 function App() {
-  const URL = "http://localhost:8080";
+  let initialSortOrder = window.localStorage.getItem("sort")
+    ? JSON.parse(window.localStorage.getItem("sort"))
+    : "asc";
+
+  let initialPurchasedOrder = window.localStorage.getItem("purchasedSort")
+    ? JSON.parse(window.localStorage.getItem("purchasedSort"))
+    : null;
 
   const [groceryArray, setGroceryArray] = useState([]);
+  const [sortOrder, setSortOrder] = useState(initialSortOrder);
+  const [purchasedOrder, setPurchasedOrder] = useState(initialPurchasedOrder);
 
-  //separate the server calls from dom updates
+  useEffect(() => {
+    window.localStorage.setItem("sort", JSON.stringify(sortOrder));
+    getGroceriesList(); //missing a dependency??
+  }, [sortOrder]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "purchasedSort",
+      JSON.stringify(purchasedOrder)
+    );
+  }, [purchasedOrder]);
+
   async function getGroceriesList() {
     try {
       let fetchedGroceryArray = await axios.get(
-        `${URL}/api/grocery/get-all-groceries`
+        `${URL}/api/grocery/sort-groceries-by-date/?sort=${sortOrder}`
       );
-      console.log(fetchedGroceryArray.data.payload);
       setGroceryArray(fetchedGroceryArray.data.payload);
     } catch (e) {
       console.log(e);
@@ -61,10 +81,6 @@ function App() {
       console.log(e);
     }
   }
-
-  useEffect(() => {
-    getGroceriesList();
-  }, []);
 
   //seperate the dom updates from the server calls
   const addGrocery = async (groceryItem) => {
@@ -121,9 +137,23 @@ function App() {
     }
   };
 
+  const handleSortByPurchased = async (newSortOrder) => {
+    try {
+      let fetchedGroceryArray = await axios.get(
+        `${URL}/api/grocery/sort-groceries-by-purchased/?purchased=${newSortOrder}`
+      );
+      setGroceryArray(fetchedGroceryArray.data.payload);
+      setPurchasedOrder(newSortOrder);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   function showGroceryInput() {
     return (
-      <GroceryInputContext.Provider value={{ addGrocery }}>
+      <GroceryInputContext.Provider
+        value={{ addGrocery, setSortOrder, handleSortByPurchased }}
+      >
         <GroceryInput />
       </GroceryInputContext.Provider>
     );
