@@ -59,7 +59,7 @@ function Grocery() {
           />
         </td>
       ) : (
-        <td>
+        <td style={{ width: "50px" }}>
           <Button buttonName="Edit" clickFunc={handleOnEditClick} />
         </td>
       )}

@@ -39,6 +39,8 @@ function App() {
     );
   }, [purchasedOrder]);
 
+  //this function incorporates the functionality of sort by date in
+  //addition to getting initial list to be called in use effect
   async function getGroceriesList() {
     try {
       let fetchedGroceryArray = await axios.get(
@@ -161,26 +163,28 @@ function App() {
 
   function showGroceries() {
     return (
-      <table>
+      <table
+        style={{ marginLeft: "auto", marginRight: "auto", width: "400px" }}
+      >
         <tbody>
-          <tr>
-            {groceryArray.map((item, index) => {
-              return (
-                <GroceryContext.Provider
-                  key={item._id}
-                  value={{
-                    grocery: item,
-                    index,
-                    handleEdit,
-                    handlePurchased,
-                    handleDelete,
-                  }}
-                >
+          {groceryArray.map((item, index) => {
+            return (
+              <GroceryContext.Provider
+                key={item._id}
+                value={{
+                  grocery: item,
+                  index,
+                  handleEdit,
+                  handlePurchased,
+                  handleDelete,
+                }}
+              >
+                <tr>
                   <Grocery />
-                </GroceryContext.Provider>
-              );
-            })}
-          </tr>
+                </tr>
+              </GroceryContext.Provider>
+            );
+          })}
         </tbody>
       </table>
     );
