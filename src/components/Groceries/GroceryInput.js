@@ -36,13 +36,13 @@ function GroceryInput() {
         <Button
           buttonName="Sort by date added - Oldest to Newest"
           clickFunc={() => {
-            setSortOrder("desc");
+            setSortOrder("asc");
           }}
         />
         <Button
           buttonName="Sort by date added - Newest to Oldest"
           clickFunc={() => {
-            setSortOrder("asc");
+            setSortOrder("desc");
           }}
         />
         <Button
